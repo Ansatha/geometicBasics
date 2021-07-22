@@ -2,9 +2,9 @@ import { Punto } from "./ClassPunto";
 
 export class Triangulo
 {
-    private p1:Punto;
-    private p2:Punto;
-    private p3:Punto;
+    p1:Punto;
+    p2:Punto;
+    p3:Punto;
 
     constructor (p1, p2, p3)
     {

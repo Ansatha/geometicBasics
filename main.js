@@ -2,7 +2,6 @@
 exports.__esModule = true;
 var ClassPunto_1 = require("./ClassPunto");
 var classTriangulo_1 = require("./classTriangulo");
-var classCartesianAxis_1 = require("./classCartesianAxis");
 function arrayNPuntosRandom(n) {
     var nPuntos = n;
     var arrayPuntos = [];
@@ -58,9 +57,4 @@ console.log('tiene las siguientes longitudes de lados:', '\nab = ' +
     trianguloA.calcularLongitudLados()[0], '\nac = ' +
     trianguloA.calcularLongitudLados()[1], '\nbc = ' +
     trianguloA.calcularLongitudLados()[2]);
-//----------------------------------------------------------------------------------
-var myCoordsGraph = new classCartesianAxis_1.CartesianAxis(10, [p1, p2, p3], undefined, undefined, undefined, undefined, undefined, "·");
-myCoordsGraph.printCartesian();
-console.log(p1.toString, myCoordsGraph.pointRelativePosition()[0], p2.toString, myCoordsGraph.pointRelativePosition()[1], p3.toString, myCoordsGraph.pointRelativePosition()[2]);
-//Punto Extra.
 //----------------------------------------------------------------------------------
