@@ -12,8 +12,8 @@ export class CartesianAxis
     private pointsName:string[];
     public pointsArray:Punto[];
 
-    constructor (dim = 10, pointsArray = [], symbolUp = '|', symbolO = '+',  // ⊥ ⊤ ⊣ ⊢ ⨀ ⨁ ⨷
-    symbolDown = '|', symbolLeft = '-', symbolRight = '-', symbolPoint = '⨂')
+    constructor (dim = 10, pointsArray = [], symbolPoint = '⨂',   // ⊥ ⊤ ⊣ ⊢ ⨀ ⨁ ⨷
+    symbolUp = '|', symbolO = '+', symbolDown = '|', symbolLeft = '-', symbolRight = '-')
     {
     this.dim = dim;
     this.symbolUp = symbolUp;
@@ -39,8 +39,9 @@ export class CartesianAxis
     {
         let finalDesign:string[][] = [];
         let lineDesign:string[] = [];
-        let checkPoints:boolean = this.pointsArray !== undefined;
+        let checkPoints:boolean = this.pointsArray.length != 0;
         let transArray:Punto[] = this.pointRelativePosition();
+        
         
         //Cuadrante 2
         //--------------------------------------------------------------------------
@@ -83,7 +84,7 @@ export class CartesianAxis
             {
                 let indexPoint:number = 0;
                 while (indexPoint < transArray.length &&
-                    (transArray[indexPoint].getX()  !== 0 ||
+                    (transArray[indexPoint].getX()  !== this.dim * 2 ||
                     transArray[indexPoint].getY() !== line))
                 {
                     indexPoint++;      
@@ -108,7 +109,7 @@ export class CartesianAxis
         //--------------------------------------------------------------------------
         for (let line:number = 0; line < this.dim; line++)
         {
-            for (let row:number = 0; row < (this.dim * 2) - 1; row += 2)
+            for (let row:number = (this.dim * 2) + 1; row < (this.dim * 4) + 1; row += 2)
             {
                 if (checkPoints)
                 {
@@ -142,7 +143,9 @@ export class CartesianAxis
             if (checkPoints)
             {
                 let indexPoint:number = 0;
-                while (indexPoint < transArray.length && (transArray[indexPoint].getX() !== row || transArray[indexPoint].getY() !== 0))
+                while (indexPoint < transArray.length &&
+                    (transArray[indexPoint].getX() !== row ||
+                    transArray[indexPoint].getY() !== this.dim))
                 {
                     indexPoint++;      
                 };
@@ -170,7 +173,9 @@ export class CartesianAxis
         if (checkPoints)
         {
             let indexPoint:number = 0;
-            while (indexPoint < transArray.length && (transArray[indexPoint].getX() !== 0 || transArray[indexPoint].getY() !== 0))
+            while (indexPoint < transArray.length &&
+                (transArray[indexPoint].getX() !== this.dim * 2 ||
+                transArray[indexPoint].getY() !== this.dim))
             {
                 indexPoint++;      
             };
@@ -197,7 +202,9 @@ export class CartesianAxis
             if (checkPoints)
             {
                 let indexPoint:number = 0;
-                while (indexPoint < transArray.length && (transArray[indexPoint].getX() !== row || transArray[indexPoint].getY() !== 0))
+                while (indexPoint < transArray.length &&
+                    (transArray[indexPoint].getX() !== row ||
+                    transArray[indexPoint].getY() !== this.dim))
                 {
                     indexPoint++;      
                 };
@@ -258,7 +265,7 @@ export class CartesianAxis
             {
                 let indexPoint:number = 0;
                 while (indexPoint < transArray.length &&
-                    (transArray[indexPoint].getX() !== 0 ||
+                    (transArray[indexPoint].getX() !== this.dim * 2 ||
                     transArray[indexPoint].getY() !== line))
                 {
                     indexPoint++;      
@@ -316,10 +323,11 @@ export class CartesianAxis
         let pointsRelativePosition:Punto[] = [];
         for (let indexPoint:number = 0; indexPoint < this.pointsArray.length; indexPoint++)
         {
-            pointsRelativePosition.push(new Punto(2 * (this.dim + this.pointsArray[indexPoint].getX()), ( this.dim - this.pointsArray[indexPoint].getY())));  
+            let newXPos:number = 2 * (this.dim + this.pointsArray[indexPoint].getX());
+            newXPos = newXPos > 21 ? newXPos - 1 : newXPos;
+            let newYPos:number = this.dim - this.pointsArray[indexPoint].getY();
+            pointsRelativePosition.push(new Punto(newXPos, newYPos));  
         };
-        console.log(pointsRelativePosition);
-        
         return pointsRelativePosition;
     };
 
@@ -336,9 +344,14 @@ export class CartesianAxis
 
     public printCartesian(color:string = '33'):void
     {
-        console.log('\n\n\n');
-        for (let line:number = 0; line < this.designCartesian().length; line++)
+        console.log('\x1b[4m%s\x1b[0m', this.pointsArray.length + ' Puntos:\n');
+        for(let i:number = 0 ; i < this.pointsArray.length; i++)
         {
+            console.log(' ' + this.pointsNaming()[i] + this.pointsArray[i].toString());
+        };
+
+        for (let line:number = 0; line < this.designCartesian().length; line++)
+        {;
             console.log('\t\x1b[' + color + 'm%s\x1b[0m', this.designCartesian()[line].join(''));  
         };
         console.log('\n\n\n');

@@ -3,16 +3,16 @@ exports.__esModule = true;
 exports.CartesianAxis = void 0;
 var ClassPunto_1 = require("./ClassPunto");
 var CartesianAxis = /** @class */ (function () {
-    function CartesianAxis(dim, pointsArray, symbolUp, symbolO, // ⊥ ⊤ ⊣ ⊢ ⨀ ⨁ ⨷
-    symbolDown, symbolLeft, symbolRight, symbolPoint) {
+    function CartesianAxis(dim, pointsArray, symbolPoint, // ⊥ ⊤ ⊣ ⊢ ⨀ ⨁ ⨷
+    symbolUp, symbolO, symbolDown, symbolLeft, symbolRight) {
         if (dim === void 0) { dim = 10; }
         if (pointsArray === void 0) { pointsArray = []; }
+        if (symbolPoint === void 0) { symbolPoint = '⨂'; }
         if (symbolUp === void 0) { symbolUp = '|'; }
         if (symbolO === void 0) { symbolO = '+'; }
         if (symbolDown === void 0) { symbolDown = '|'; }
         if (symbolLeft === void 0) { symbolLeft = '-'; }
         if (symbolRight === void 0) { symbolRight = '-'; }
-        if (symbolPoint === void 0) { symbolPoint = '⨂'; }
         this.dim = dim;
         this.symbolUp = symbolUp;
         this.symbolO = symbolO;
@@ -35,7 +35,7 @@ var CartesianAxis = /** @class */ (function () {
     CartesianAxis.prototype.designCartesian = function () {
         var finalDesign = [];
         var lineDesign = [];
-        var checkPoints = this.pointsArray !== undefined;
+        var checkPoints = this.pointsArray.length != 0;
         var transArray = this.pointRelativePosition();
         //Cuadrante 2
         //--------------------------------------------------------------------------
@@ -72,7 +72,7 @@ var CartesianAxis = /** @class */ (function () {
             if (checkPoints) {
                 var indexPoint = 0;
                 while (indexPoint < transArray.length &&
-                    (transArray[indexPoint].getX() !== 0 ||
+                    (transArray[indexPoint].getX() !== this.dim * 2 ||
                         transArray[indexPoint].getY() !== line)) {
                     indexPoint++;
                 }
@@ -94,7 +94,7 @@ var CartesianAxis = /** @class */ (function () {
         //Cuadrante 1
         //--------------------------------------------------------------------------
         for (var line = 0; line < this.dim; line++) {
-            for (var row = 0; row < (this.dim * 2) - 1; row += 2) {
+            for (var row = (this.dim * 2) + 1; row < (this.dim * 4) + 1; row += 2) {
                 if (checkPoints) {
                     var indexPoint = 0;
                     while (indexPoint < transArray.length && (transArray[indexPoint].getX() !== row || transArray[indexPoint].getY() !== line)) {
@@ -123,7 +123,9 @@ var CartesianAxis = /** @class */ (function () {
         for (var row = 0; row < (this.dim * 2) - 1; row += 2) {
             if (checkPoints) {
                 var indexPoint = 0;
-                while (indexPoint < transArray.length && (transArray[indexPoint].getX() !== row || transArray[indexPoint].getY() !== 0)) {
+                while (indexPoint < transArray.length &&
+                    (transArray[indexPoint].getX() !== row ||
+                        transArray[indexPoint].getY() !== this.dim)) {
                     indexPoint++;
                 }
                 ;
@@ -148,7 +150,9 @@ var CartesianAxis = /** @class */ (function () {
         //--------------------------------------------------------------------------
         if (checkPoints) {
             var indexPoint = 0;
-            while (indexPoint < transArray.length && (transArray[indexPoint].getX() !== 0 || transArray[indexPoint].getY() !== 0)) {
+            while (indexPoint < transArray.length &&
+                (transArray[indexPoint].getX() !== this.dim * 2 ||
+                    transArray[indexPoint].getY() !== this.dim)) {
                 indexPoint++;
             }
             ;
@@ -170,7 +174,9 @@ var CartesianAxis = /** @class */ (function () {
         for (var row = (this.dim * 2) + 1; row < (this.dim * 4) + 1; row += 2) {
             if (checkPoints) {
                 var indexPoint = 0;
-                while (indexPoint < transArray.length && (transArray[indexPoint].getX() !== row || transArray[indexPoint].getY() !== 0)) {
+                while (indexPoint < transArray.length &&
+                    (transArray[indexPoint].getX() !== row ||
+                        transArray[indexPoint].getY() !== this.dim)) {
                     indexPoint++;
                 }
                 ;
@@ -224,7 +230,7 @@ var CartesianAxis = /** @class */ (function () {
             if (checkPoints) {
                 var indexPoint = 0;
                 while (indexPoint < transArray.length &&
-                    (transArray[indexPoint].getX() !== 0 ||
+                    (transArray[indexPoint].getX() !== this.dim * 2 ||
                         transArray[indexPoint].getY() !== line)) {
                     indexPoint++;
                 }
@@ -276,10 +282,12 @@ var CartesianAxis = /** @class */ (function () {
     CartesianAxis.prototype.pointRelativePosition = function () {
         var pointsRelativePosition = [];
         for (var indexPoint = 0; indexPoint < this.pointsArray.length; indexPoint++) {
-            pointsRelativePosition.push(new ClassPunto_1.Punto(2 * (this.dim + this.pointsArray[indexPoint].getX()), (this.dim - this.pointsArray[indexPoint].getY())));
+            var newXPos = 2 * (this.dim + this.pointsArray[indexPoint].getX());
+            newXPos = newXPos > 21 ? newXPos - 1 : newXPos;
+            var newYPos = this.dim - this.pointsArray[indexPoint].getY();
+            pointsRelativePosition.push(new ClassPunto_1.Punto(newXPos, newYPos));
         }
         ;
-        console.log(pointsRelativePosition);
         return pointsRelativePosition;
     };
     ;
@@ -294,8 +302,13 @@ var CartesianAxis = /** @class */ (function () {
     ;
     CartesianAxis.prototype.printCartesian = function (color) {
         if (color === void 0) { color = '33'; }
-        console.log('\n\n\n');
+        console.log('\x1b[4m%s\x1b[0m', this.pointsArray.length + ' Puntos:\n');
+        for (var i = 0; i < this.pointsArray.length; i++) {
+            console.log(' ' + this.pointsNaming()[i] + this.pointsArray[i].toString());
+        }
+        ;
         for (var line = 0; line < this.designCartesian().length; line++) {
+            ;
             console.log('\t\x1b[' + color + 'm%s\x1b[0m', this.designCartesian()[line].join(''));
         }
         ;

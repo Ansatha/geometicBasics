@@ -1,0 +1,5 @@
+# javascript files
+*.js
+
+#Others
+.DS_Stored

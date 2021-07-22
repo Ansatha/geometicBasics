@@ -65,7 +65,7 @@ console.log('Tomando el array:', arrayPuntos, '\n Este punto:',
 
 //Punto 16.
 //----------------------------------------------------------------------------------
-let p1:Punto = arrayNPuntosRandom(1)[0];
+let p1:Punto = arrayNPuntosRandom(1)[0]
 let p2:Punto = arrayNPuntosRandom(1)[0];
 let p3:Punto = arrayNPuntosRandom(1)[0];
 let trianguloA:Triangulo = new Triangulo (p1, p2, p3);
@@ -79,3 +79,10 @@ console.log('tiene las siguientes longitudes de lados:','\nab = ' +
             trianguloA.calcularLongitudLados()[2]);
 //----------------------------------------------------------------------------------
 
+
+//Punto Extra.
+//----------------------------------------------------------------------------------
+console.log('\n\x1b[36m%s\x1b[0m','EXTRA. Mostrar puntos en los ejes:');
+let myCoordsGraph:CartesianAxis = new CartesianAxis(10, [p1, p2, p3],"·");
+myCoordsGraph.printCartesian();
+//console.log(p1.toString, myCoordsGraph.pointRelativePosition()[0], p2.toString, myCoordsGraph.pointRelativePosition()[1], p3.toString, myCoordsGraph.pointRelativePosition()[2]);
